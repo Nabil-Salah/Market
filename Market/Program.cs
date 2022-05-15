@@ -5,16 +5,30 @@ namespace Market
     public class customer
     {
         protected string Name;
-        protected int price;
-        protected int[] cart= new int[50];
-        private int i;
-        public void addTocart(int item)
+        protected double price;
+        protected Product[] cart= new Product [50];
+        private int index;
+        public void addTocart(Product item,double q)
         {
-            cart[i] = item;
+            cart[index++] = item;
+            price += item.p_price*q;
+        }
+        public void removeFromcart(uint itemId, double q)
+        {
+            double price=0;
+            for (int i = 0; i < cart.Length; i++)
+            {
+                if(cart[i].p_id == itemId)
+                {
+                    price = cart[i].p_price*q;
+                    cart[i] = cart[--index];
+                }
+            }
+            price -= price;
         }
         public customer()
         {
-            i = 0;
+            index = 0;
             Name = "Default Name";
             price = 0;
         }
@@ -22,7 +36,7 @@ namespace Market
         {
             this.Name = Name;
             this.price = price;
-            i = 0;
+            index = 0;
         }
     }
     public class visaCustomer : customer
@@ -35,7 +49,7 @@ namespace Market
         }
         public double totalPaid()
         {
-            return (double)price*discount;
+            return price*discount;
         } 
     }
     public class cashCustomer : customer
@@ -45,18 +59,18 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
-        public int totalPaid()
+        public double totalPaid()
         {
             return price;
         }
     }
-    class Product {
+    public class Product {
 		public static uint id;
 		public uint p_id = id; 
 
 		public string p_name;
 		public double p_price;
-		public int p_quantity;
+		public double p_quantity;
 
 		public Product (string name, double price, int quantity) {
 			this.p_name = name;
