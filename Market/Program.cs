@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Market
 {
@@ -6,29 +7,28 @@ namespace Market
     {
         protected string Name;
         protected double price;
-        protected Product[] cart= new Product [50];
-        private int index;
+        protected List<Product> cart = new List<Product>();
         public void addTocart(Product item,double q)
         {
-            cart[index++] = item;
+            cart.Add( item);
             price += item.p_price*q;
         }
         public void removeFromcart(uint itemId, double q)
         {
+            if(cart.Count == 0) return;
             double price=0;
-            for (int i = 0; i < cart.Length; i++)
+            for (int i = 0; i < cart.Count; i++)
             {
                 if(cart[i].p_id == itemId)
                 {
                     price = cart[i].p_price*q;
-                    cart[i] = cart[--index];
+                    cart.RemoveAt(cart.Count-1);
                 }
             }
             price -= price;
         }
         public customer()
         {
-            index = 0;
             Name = "Default Name";
             price = 0;
         }
@@ -36,12 +36,21 @@ namespace Market
         {
             this.Name = Name;
             this.price = price;
-            index = 0;
         }
     }
     public class visaCustomer : customer
     {
-        public double discount;
+        private double discount;
+        public double discount_p
+        {
+            get { return discount; }
+            set { 
+                if(0 < value)
+                    discount = value;
+                else
+                    discount = 0;
+            }
+        }
         public visaCustomer(string Name,int price)
         {
             this.Name = Name;
