@@ -1,79 +1,78 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Market
 {
-	public class customer
-	{
-		protected string Name;
-		protected double price;
-		protected List<Product> cart = new List<Product>();
-		public void addTocart(Product item, double q)
-		{
-			cart.Add(item);
-			price += item.p_price * q;
-		}
-		public void removeFromcart(uint itemId, double q)
-		{
-			if (cart.Count == 0) return;
-			double price = 0;
-			for (int i = 0; i < cart.Count; i++)
-			{
-				if (cart[i].p_id == itemId)
-				{
-					price = cart[i].p_price * q;
-					cart.RemoveAt(cart.Count - 1);
-				}
-			}
-			price -= price;
-		}
-		public customer()
-		{
-			Name = "Default Name";
-			price = 0;
-		}
-		public customer(string Name, int price)
-		{
-			this.Name = Name;
-			this.price = price;
-		}
-	}
-	public class visaCustomer : customer
-	{
-		private double discount;
-		public double discount_p
-		{
-			get { return discount; }
-			set
-			{
-				if (0 < value)
-					discount = value;
-				else
-					discount = 0;
-			}
-		}
-		public visaCustomer(string Name, int price)
-		{
-			this.Name = Name;
-			this.price = price;
-		}
-		public double totalPaid()
-		{
-			return price * discount;
-		}
-	}
-	public class cashCustomer : customer
-	{
-		public cashCustomer(string Name, int price)
-		{
-			this.Name = Name;
-			this.price = price;
-		}
-		public double totalPaid()
-		{
-			return price;
-		}
-	}
+    public class customer
+    {
+        protected string Name;
+        protected double price;
+        protected List<Product> cart = new List<Product>();
+        public void addTocart(Product item,double q)
+        {
+            cart.Add( item);
+            price += item.p_price*q;
+        }
+        public void removeFromcart(uint itemId, double q)
+        {
+            if(cart.Count == 0) return;
+            double price=0;
+            for (int i = 0; i < cart.Count; i++)
+            {
+                if(cart[i].p_id == itemId)
+                {
+                    price = cart[i].p_price*q;
+                    cart.RemoveAt(cart.Count-1);
+                }
+            }
+            price -= price;
+        }
+        public customer()
+        {
+            Name = "Default Name";
+            price = 0;
+        }
+        public customer(string Name,int price)
+        {
+            this.Name = Name;
+            this.price = price;
+        }
+    }
+    public class visaCustomer : customer
+    {
+        private double discount;
+        public double discount_p
+        {
+            get { return discount; }
+            set { 
+                if(0 < value)
+                    discount = value;
+                else
+                    discount = 0;
+            }
+        }
+        public visaCustomer(string Name,int price)
+        {
+            this.Name = Name;
+            this.price = price;
+        }
+        public double totalPaid()
+        {
+            return price*discount;
+        } 
+    }
+    public class cashCustomer : customer
+    {
+        public cashCustomer(string Name, int price)
+        {
+            this.Name = Name;
+            this.price = price;
+        }
+        public double totalPaid()
+        {
+            return price;
+        }
+    }
 	public class Product
 	{
 		public static uint counter;
