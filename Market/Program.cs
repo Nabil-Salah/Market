@@ -90,7 +90,34 @@ namespace Market
 			Product.counter++;
 		}
 	}
+	public class _Market
+    {
+		private double income;
+		public int NumberOfCustomers;
+		public static List<Product> Products;
 
+		public _Market()
+        {
+			income = 0;
+        }
+		public _Market(List<Product> p)
+        {
+			Products = p;
+        }
+
+		public static void AddProduct(List<Product> p1)
+        {
+			for (int i = 0; i < p1.Count; i++)
+            {
+				Products.Add(p1[i]);
+            }
+        }
+		public static void addProduct(Product ObJect)
+		{
+			Products.Add(ObJect);
+		}
+
+	}
 
 	class Project
 	{
