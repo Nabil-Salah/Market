@@ -73,28 +73,27 @@ namespace Market
             return price;
         }
     }
-    public class Product {
-		public static uint id;
-		public uint p_id = id; 
-
-class Product{
+	public class Product
+	{
 		public static uint counter;
 		public uint p_id = counter;
 
 		public string p_name;
 		public double p_price;
-		public int    p_quantity;
+		public int p_quantity;
 
-		public Product(string p_name, double p_price, int p_quantity) {
-			this.p_name     = p_name;
-			this.p_price    = p_price;
+		public Product(string p_name, double p_price, int p_quantity)
+		{
+			this.p_name = p_name;
+			this.p_price = p_price;
 			this.p_quantity = p_quantity;
 			Product.counter++;
 		}
 	}
 
 
-	class Project {
+	class Project
+	{
 
 		public static Product[] Products = new Product[] {
 					  	new Product("Tea", 10, 100),
@@ -111,23 +110,29 @@ class Product{
 					  	new Product("Candy", 14, 100),
 					  	new Product("Fish", 30, 100),
 					  	new Product("Bread", 2, 100),
-				}; 
+				};
 		public static Product[] new_product = new Product[100];
 		public static int index;
 
 
 		/* ----------- start of customer ot staff Method ----------- */
-		public static void CustomerORstuff() {
+		public static void CustomerORstuff()
+		{
 			Console.WriteLine("\t[1] Marketr Staff");
 			Console.WriteLine("\t[2] Customer");
 			Console.Write("Please choose (1) or (2)    ");
-			int  _1stchoice;
+			int _1stchoice;
 			bool _1stchoiceCheck = int.TryParse(Console.ReadLine(), out _1stchoice);
-			if(_1stchoice == 1) {
+			if (_1stchoice == 1)
+			{
 				staff_log_in();
-			}else if(_1stchoice == 2){
+			}
+			else if (_1stchoice == 2)
+			{
 				Console.WriteLine("HI, Customer...");
-			}else{
+			}
+			else
+			{
 				Console.WriteLine("\n----> Please Enter number (1) or number (2) <----\n");
 				CustomerORstuff();
 			}
@@ -136,15 +141,19 @@ class Product{
 
 
 		/* ----------- Start of staff login Method ----------- */
-		public static void staff_log_in() {
+		public static void staff_log_in()
+		{
 			Console.WriteLine("\n*** Hi their, please enter market staff login credentials ***");
 			Console.Write("username: ");
 			string uname = Console.ReadLine();
 			Console.Write("password: ");
 			string password = Console.ReadLine();
-			if (uname == "admin" && password == "admin"){
+			if (uname == "admin" && password == "admin")
+			{
 				Staff_List_Choose();
-			}else{
+			}
+			else
+			{
 				Console.WriteLine("\n----> Wrong user name or password please try agin <----\n");
 				staff_log_in();
 			}
@@ -153,7 +162,8 @@ class Product{
 
 
 		/* ----------- Start of staff list Method ----------- */
-		public static void Staff_List_Choose() {
+		public static void Staff_List_Choose()
+		{
 			Console.Clear();
 			Console.WriteLine("Welcome to admin panel.....");
 			Console.WriteLine("Please choose what do you want to do....");
@@ -163,15 +173,20 @@ class Product{
 			Console.WriteLine("\t[3] Modifiy Products");
 			Console.WriteLine("\t[4] Delete  Products");
 			Console.Write("Please choose number from the above:     ");
-			int  _1staffchoice;
+			int _1staffchoice;
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
-			if(_1staffchoice == 1){
+			if (_1staffchoice == 1)
+			{
 				print_products();
 				In_or_out();
-			}else if(_1staffchoice == 2){
+			}
+			else if (_1staffchoice == 2)
+			{
 				add_product();
 				In_or_out();
-			}else{
+			}
+			else
+			{
 				Console.WriteLine("\n----> Please Enter a vaild number <----\n");
 				Staff_List_Choose();
 			}
@@ -180,123 +195,159 @@ class Product{
 
 
 		/* ----------- Start of print products Method ----------- */
-		public static void print_products(){
+		public static void print_products()
+		{
 			Console.WriteLine("-----------------------------------------");
 			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
 			Console.WriteLine("-----------------------------------------");
-			foreach (Product p in Products) {
-				Console.Write("{0}",p.p_id);
-				Console.Write("\t{0}",p.p_name);
-				Console.Write("\t\t\t{0}",p.p_price);
-				Console.Write("\t{0}",p.p_quantity);
+			foreach (Product p in Products)
+			{
+				Console.Write("{0}", p.p_id);
+				Console.Write("\t{0}", p.p_name);
+				Console.Write("\t\t\t{0}", p.p_price);
+				Console.Write("\t{0}", p.p_quantity);
 				Console.WriteLine();
 			}
-			for (uint i = 0; i<Project.index; i++){
-				Console.Write("{0}",new_product[i].p_id);
-			 	Console.Write("\t{0}",new_product[i].p_name);
-			 	Console.Write("\t\t\t{0}",new_product[i].p_price);
-			 	Console.Write("\t{0}",new_product[i].p_quantity);
-			 	Console.WriteLine();
+			for (uint i = 0; i < Project.index; i++)
+			{
+				Console.Write("{0}", new_product[i].p_id);
+				Console.Write("\t{0}", new_product[i].p_name);
+				Console.Write("\t\t\t{0}", new_product[i].p_price);
+				Console.Write("\t{0}", new_product[i].p_quantity);
+				Console.WriteLine();
 			}
 		}
 		/* ----------- end of print products Method ----------- */
 
 
 		/* ----------- Start of add products Method ----------- */
-		public static void add_product() {
-					Console.WriteLine("[1] add to existing product");
-					Console.WriteLine("[2] add new product");
-					Console.Write("Please Choose (1) or (2)    ");
-					int  success;
-					bool productScucess = int.TryParse(Console.ReadLine(), out success);
-					if (success == 1){
-						while (true) {
-							Console.Write("Enter Product id: ");
-							int  _id;
-							bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
-							if (_idSuccess){
-								if(_id <= 13){
-									Console.Write("Enter the quantity you woule like to add: ");
-									int quantityCheck;
-									bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
-									if (quantityCheckSuccess) {
-										Products[_id].p_quantity+=quantityCheck;
-										break;
-									}else{
-										Console.WriteLine("Plese Enter valid intger....");
-									}
-								}else if(_id > 13 && (Project.index-_id)>=0){
-									Console.Write("Enter the quantity you woule like to add: ");
-									int quantityCheck;
-									bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
-									if (quantityCheckSuccess) {
-										new_product[_id].p_quantity+=quantityCheck;
-										break;
-									}else{
-										Console.WriteLine("Plese Enter valid intger....");
-									}
-								}else{
-									Console.WriteLine("---> Their is no prduct with this id, please enter a valid id.");
-								}
-							}else{
-								Console.WriteLine("Please Enter a valid Intger...");
+		public static void add_product()
+		{
+			Console.WriteLine("[1] add to existing product");
+			Console.WriteLine("[2] add new product");
+			Console.Write("Please Choose (1) or (2)    ");
+			int success;
+			bool productScucess = int.TryParse(Console.ReadLine(), out success);
+			if (success == 1)
+			{
+				while (true)
+				{
+					Console.Write("Enter Product id: ");
+					int _id;
+					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+					if (_idSuccess)
+					{
+						if (_id <= 13)
+						{
+							Console.Write("Enter the quantity you woule like to add: ");
+							int quantityCheck;
+							bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
+							if (quantityCheckSuccess)
+							{
+								Products[_id].p_quantity += quantityCheck;
+								break;
 							}
+							else
+							{
+								Console.WriteLine("Plese Enter valid intger....");
+							}
+						}
+						else if (_id > 13 && (Project.index - _id) >= 0)
+						{
+							Console.Write("Enter the quantity you woule like to add: ");
+							int quantityCheck;
+							bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
+							if (quantityCheckSuccess)
+							{
+								new_product[_id].p_quantity += quantityCheck;
+								break;
+							}
+							else
+							{
+								Console.WriteLine("Plese Enter valid intger....");
+							}
+						}
+						else
+						{
+							Console.WriteLine("---> Their is no prduct with this id, please enter a valid id.");
 						}
 					}
-					else if (success == 2){
-						Project.index = 0;
-						Console.Write("Enter Product Name: ");
-						string name = Console.ReadLine();
-
-						double _price;
-						while (true) {
-							Console.Write("Enter Product Price: ");
-							bool _priceSuccess = double.TryParse(Console.ReadLine(), out _price);
-							if (_priceSuccess){
-								break;
-							}else{
-								Console.WriteLine("Please Enter a valid decmial...");
-							}
-						}
-
-						int _quantity;
-						while (true) {
-							Console.Write("Enter Product Quantity: ");
-							bool _quantitySuccess = int.TryParse(Console.ReadLine(), out _quantity);
-							if (_quantitySuccess){
-								break;
-							}else{
-								Console.WriteLine("Please Enter a valid intger...");
-							}
-						}
-
-						new_product[Project.index] = new Product(name, _price, _quantity);
-						Project.index++;
-					}else{
-						Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
-						add_product();
+					else
+					{
+						Console.WriteLine("Please Enter a valid Intger...");
 					}
 				}
+			}
+			else if (success == 2)
+			{
+				Project.index = 0;
+				Console.Write("Enter Product Name: ");
+				string name = Console.ReadLine();
+
+				double _price;
+				while (true)
+				{
+					Console.Write("Enter Product Price: ");
+					bool _priceSuccess = double.TryParse(Console.ReadLine(), out _price);
+					if (_priceSuccess)
+					{
+						break;
+					}
+					else
+					{
+						Console.WriteLine("Please Enter a valid decmial...");
+					}
+				}
+
+				int _quantity;
+				while (true)
+				{
+					Console.Write("Enter Product Quantity: ");
+					bool _quantitySuccess = int.TryParse(Console.ReadLine(), out _quantity);
+					if (_quantitySuccess)
+					{
+						break;
+					}
+					else
+					{
+						Console.WriteLine("Please Enter a valid intger...");
+					}
+				}
+
+				new_product[Project.index] = new Product(name, _price, _quantity);
+				Project.index++;
+			}
+			else
+			{
+				Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
+				add_product();
+			}
+		}
 		/* ----------- end of add products Method ----------- */
 
 		/* ----------- start of in or out Method ----------- */
-			public static void In_or_out() {
-				Console.WriteLine("Would you like to proceed or exit...");
-				Console.WriteLine("\t[1] Proceed");
-				Console.WriteLine("\t[2] exit");
-				Console.Write("Please Choose (1) or (2)    ");
-				int P_var;
-				bool P_varSuccess = int.TryParse(Console.ReadLine(), out P_var);
-				if (P_var == 1){
-					Staff_List_Choose();
-				}else{
-					Console.WriteLine("Ok Good BYE........");
-				}
+		public static void In_or_out()
+		{
+			Console.WriteLine("Would you like to proceed or exit...");
+			Console.WriteLine("\t[1] Proceed");
+			Console.WriteLine("\t[2] exit");
+			Console.Write("Please Choose (1) or (2)    ");
+			int P_var;
+			bool P_varSuccess = int.TryParse(Console.ReadLine(), out P_var);
+			if (P_var == 1)
+			{
+				Staff_List_Choose();
 			}
+			else
+			{
+				Console.WriteLine("Ok Good BYE........");
+			}
+		}
 		/* ----------- end of int or out Method ----------- */
 
 		/* ----------- Start of Main Method ----------- */
-		public static void Main(string[] args) {
+		public static void Main(string[] args)
+		{
 			Console.WriteLine("Welcome to our store software....");
 			CustomerORstuff();
 		}
