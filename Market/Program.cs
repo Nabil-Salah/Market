@@ -116,6 +116,10 @@ namespace Market
 		{
 			Products.Add(ObJect);
 		}
+		public static void FromCustomer(customer c)
+        {
+
+        }
 
 	}
 
