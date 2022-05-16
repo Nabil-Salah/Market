@@ -9,24 +9,119 @@ namespace Market
         protected double price;
         protected List<Product> cart = new List<Product>();
 		public List<Product> c_cart { get { return cart; } }
-        public void addTocart(Product item,double q)
+        public void addTocart()
         {
-            cart.Add( item);
-            price += item.p_price*q;
+			Console.WriteLine("[1] add to existing product");
+			Console.WriteLine("[2] add new product");
+			Console.Write("Please Choose (1) or (2)    ");
+			int success;
+			bool productScucess = int.TryParse(Console.ReadLine(), out success);
+			if (success == 1)
+			{
+				while (true)
+				{
+					Console.Write("Enter Product id: ");
+					int _id;
+					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+					if (_idSuccess)
+					{
+						Console.Write("Enter the quantity you woule like to add: ");
+						int quantityCheck;
+						bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
+						if (quantityCheckSuccess)
+						{
+							foreach (Product product in cart)
+                            {
+								if(product.p_id == _id)
+                                {
+									product.p_quantity += quantityCheck;
+									price += quantityCheck * product.p_price;
+									break;
+                                }
+                            }
+							break;
+						}
+						else
+						{
+							Console.WriteLine("Plese Enter valid intger....");
+						}
+					}
+					else
+					{
+						Console.WriteLine("Please Enter a valid Intger...");
+					}
+				}
+			}
+			else if (success == 2)
+			{
+				Console.Write("Enter Product Name: ");
+				string name = Console.ReadLine();
+
+				double _price;
+				while (true)
+				{
+					Console.Write("Enter Product Price: ");
+					bool _priceSuccess = double.TryParse(Console.ReadLine(), out _price);
+					if (_priceSuccess)
+					{
+						break;
+					}
+					else
+					{
+						Console.WriteLine("Please Enter a valid decmial...");
+					}
+				}
+
+				int _quantity;
+				while (true)
+				{
+					Console.Write("Enter Product Quantity: ");
+					bool _quantitySuccess = int.TryParse(Console.ReadLine(), out _quantity);
+					if (_quantitySuccess)
+					{
+						break;
+					}
+					else
+					{
+						Console.WriteLine("Please Enter a valid intger...");
+					}
+				}
+				Product p = new Product(name, _price, _quantity);
+				cart.Add(p);
+				price += p.p_price;
+			}
+			else
+			{
+				Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
+				addTocart();
+			}
         }
-        public void removeFromcart(uint itemId, double q)
+		public void print_cart()
+		{
+			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
+			Console.WriteLine("-----------------------------------------");
+			foreach (Product p in cart)
+			{
+				Console.Write("{0}", p.p_id);
+				Console.Write("\t{0}", p.p_name);
+				Console.Write("\t\t\t{0}", p.p_price);
+				Console.Write("\t{0}", p.p_quantity);
+				Console.WriteLine();
+			}
+		}
+		public void removeFromcart(int itemId)
         {
             if(cart.Count == 0) return;
-            double price=0;
-            for (int i = 0; i < cart.Count; i++)
+            foreach (Product p in cart)
             {
-                if(cart[i].p_id == itemId)
+				if(p.p_id == itemId)
                 {
-                    price = cart[i].p_price*q;
-                    cart.RemoveAt(cart.Count-1);
+					price -= p.p_price * p.p_quantity;
+					cart.Remove(p);
+					break;
                 }
             }
-            price -= price;
         }
         public customer()
         {
@@ -38,6 +133,11 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
+		public customer(string Name)
+		{
+			this.Name = Name;
+			this.price = 0;
+		}
 		public virtual double totalPaid()
 		{
 			return price;
@@ -61,7 +161,12 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
-        public override double totalPaid()
+		public visaCustomer()
+		{
+			this.Name = "defualt";
+			this.price = 0;
+		}
+		public override double totalPaid()
         {
             return price*discount;
         } 
@@ -125,6 +230,13 @@ namespace Market
 				Console.WriteLine("---> Please Enter a valid input.");
 			}
 		}
+		public Product(Product old)
+        {
+			this.p_id = old.p_id;
+			this.p_name = old.p_name;
+			this.p_price = old.p_price;
+			this.p_quantity = old.p_quantity;
+        }
 	}
 	public class _Market
     {
@@ -250,7 +362,7 @@ namespace Market
 					  	new Product("Bread", 2, 100),
 				};
 		public static _Market newMarket = new _Market(Products);
-
+		public static customer MainCustomer = new customer("Nabil");
 		/* ----------- start of customer ot staff Method ----------- */
 		public static void CustomerORstuff()
 		{
@@ -265,6 +377,7 @@ namespace Market
 			}
 			else if (_1stchoice == 2)
 			{
+				customerGet();
 				Console.WriteLine("HI, Customer...");
 			}
 			else
@@ -273,6 +386,99 @@ namespace Market
 				CustomerORstuff();
 			}
 		}
+		public static void customerGet()
+        {
+			Console.Clear();
+			Console.WriteLine("Welcome to admin panel.....");
+			Console.WriteLine("Please choose what do you want to do....");
+			Console.WriteLine("[-] Products");
+			Console.WriteLine("\t[1] List    Products");
+			Console.WriteLine("\t[2] Add     Products");
+			Console.WriteLine("\t[3] Delete  Products");
+			Console.WriteLine("\t[4] checkout  Products");
+			Console.Write("Please choose number from the above:     ");
+			int _1staffchoice;
+			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
+			if (_1staffchoice == 1)
+			{
+				MainCustomer.print_cart();
+				In_or_out_c();
+			}
+			else if (_1staffchoice == 2)
+			{
+				MainCustomer.addTocart();
+				In_or_out_c();
+			}
+			else if (_1staffchoice == 3)
+			{
+				Product_Delete_C();
+				In_or_out_c();
+			}
+			else if (_1staffchoice == 4)
+			{
+				MainCustomer.print_cart();
+				/*Console.WriteLine("Please choose what is your payment method....");
+				Console.WriteLine("[-] Methods");
+				Console.WriteLine("\t[1] Visa");
+				Console.WriteLine("\t[2] Cash");
+				int i = int.Parse(Console.ReadLine());
+				if(i == 1)
+                {
+					visaCustomer v = new visaCustomer();
+					v = MainCustomer;
+                }
+                else
+                {
+
+                }*/
+				newMarket.checkOut(MainCustomer);
+				In_or_out_c();
+			}
+			else
+			{
+				Console.WriteLine("\n----> Please Enter a vaild number <----\n");
+				Staff_List_Choose();
+			}
+		}
+		/* ----------- start of in or out Method ----------- */
+		public static void In_or_out_c()
+		{
+			Console.WriteLine("Would you like to proceed or exit...");
+			Console.WriteLine("\t[1] Proceed");
+			Console.WriteLine("\t[2] exit");
+			Console.Write("Please Choose (1) or (2)    ");
+			int P_var;
+			bool P_varSuccess = int.TryParse(Console.ReadLine(), out P_var);
+			if (P_var == 1)
+			{
+				customerGet();
+			}
+			else
+			{
+				Console.WriteLine("Ok Good BYE........");
+			}
+		}
+		/* ----------- end of int or out Method ----------- */
+		/* ----------- Start of add products Method ----------- */
+		public static void Product_Delete_C()
+		{
+			while (true)
+			{
+				Console.Write("Enter Product id: ");
+				int _id;
+				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+				if (_idSuccess)
+				{
+					MainCustomer.removeFromcart(_id);
+					break;
+				}
+				else
+				{
+					Console.WriteLine("Please Enter a valid Intger...");
+				}
+			}
+		}
+		/* ----------- end of add products Method ----------- */
 		/* ----------- end of customer ot staff Method ----------- */
 		public static void Product_modification()
 		{
