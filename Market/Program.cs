@@ -80,8 +80,8 @@ namespace Market
     }
 	public class Product
 	{
-		public static uint counter;
-		public uint p_id = counter;
+		public static int counter;
+		public int p_id = counter;
 
 		public string p_name;
 		public double p_price;
@@ -94,13 +94,44 @@ namespace Market
 			this.p_quantity = p_quantity;
 			Product.counter++;
 		}
+		public void Modify_Product()
+		{
+			Console.WriteLine("You are modeifing the following product.. ");
+			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
+			Console.Write("{0}", this.p_id);
+			Console.Write("\t{0}", this.p_name);
+			Console.Write("\t\t\t{0}", this.p_price);
+			Console.Write("\t{0}", this.p_quantity);
+			Console.WriteLine();
+			Console.WriteLine("What do yuo want to change...");
+			Console.WriteLine("[1] Name");
+			Console.WriteLine("[2] Price");
+			Console.Write("Please Enter (1) or (2)   ");
+			int choice = int.Parse(Console.ReadLine());
+			if (choice == 1)
+			{
+				Console.Write("Please Enter the new name: ");
+				string N_name = Console.ReadLine();
+				this.p_name = N_name;
+			}
+			else if (choice == 2)
+			{
+				Console.Write("Please Enter the new price: ");
+				double N_price = double.Parse(Console.ReadLine());
+				this.p_price = N_price;
+			}
+			else
+			{
+				Console.WriteLine("---> Please Enter a valid input.");
+			}
+		}
 	}
 	public class _Market
     {
-		private double income;
+		private static double income;
 		public int NumberOfCustomers;
 		public static List<Product> Products;
-
+		public static double _income { get { return income; } } 
 		public _Market()
         {
 			income = 0;
@@ -110,19 +141,29 @@ namespace Market
 			income = 0;
 			Products = p;
         }
-
-		public static void AddProduct(List<Product> p1)
+		public void deleteProduct(int _id)
+		{
+			foreach (Product p in Products)
+            {
+				if(p.p_id == _id)
+                {
+					Products.Remove(p);
+					break;
+				}
+            }
+		}
+		public void AddProduct(List<Product> p1)
         {
 			for (int i = 0; i < p1.Count; i++)
             {
 				Products.Add(p1[i]);
             }
         }
-		public static void addProduct(Product ObJect)
+		public void addProduct(Product ObJect)
 		{
 			Products.Add(ObJect);
 		}
-		public static double checkOut(customer c)
+		public double checkOut(customer c)
         {
 			bool isFound = false,qOverFlow=false;
 			foreach (Product p in c.c_cart)
@@ -144,18 +185,55 @@ namespace Market
                 }
 				if (isFound) break;
             }
+			
 			if (!qOverFlow)
+			{
+				income += c.totalPaid();
 				return c.totalPaid();
+			}
 			else
 				return 0;
         }
-
+		public void print_products()
+		{
+			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
+			Console.WriteLine("-----------------------------------------");
+			foreach (Product p in Products)
+			{
+				Console.Write("{0}", p.p_id);
+				Console.Write("\t{0}", p.p_name);
+				Console.Write("\t\t\t{0}", p.p_price);
+				Console.Write("\t{0}", p.p_quantity);
+				Console.WriteLine();
+			}
+		}
+		public void addQuantity(int _id, int q)
+		{
+			foreach (Product p in Products)
+			{
+				if (p.p_id == _id)
+				{
+					p.p_quantity += q;
+				}
+			}
+		}
+		public void modifyP(int _id)
+        {
+			foreach(Product p in Products)
+            {
+				if(p.p_id == _id)
+                {
+					p.Modify_Product();
+					break;
+                }
+            }
+        }
 	}
-
 	class Project
 	{
 
-		public static Product[] Products = new Product[] {
+		public static List<Product> Products = new List<Product> {
 					  	new Product("Tea", 10, 100),
 					  	new Product("Milk", 20.25, 100),
 					  	new Product("Coffee", 15.21, 100),
@@ -171,9 +249,7 @@ namespace Market
 					  	new Product("Fish", 30, 100),
 					  	new Product("Bread", 2, 100),
 				};
-		public static Product[] new_product = new Product[100];
-		public static int index;
-
+		public static _Market newMarket = new _Market(Products);
 
 		/* ----------- start of customer ot staff Method ----------- */
 		public static void CustomerORstuff()
@@ -198,7 +274,25 @@ namespace Market
 			}
 		}
 		/* ----------- end of customer ot staff Method ----------- */
-
+		public static void Product_modification()
+		{
+			while (true)
+			{
+				Console.Write("Enter Product id: ");
+				int _id;
+				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+				if (_idSuccess)
+				{
+					newMarket.modifyP(_id);
+					break;
+					
+				}
+				else
+				{
+					Console.WriteLine("Please Enter a valid Intger...");
+				}
+			}
+		}
 
 		/* ----------- Start of staff login Method ----------- */
 		public static void staff_log_in()
@@ -237,12 +331,21 @@ namespace Market
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
 			if (_1staffchoice == 1)
 			{
-				print_products();
+				newMarket.print_products();
 				In_or_out();
 			}
 			else if (_1staffchoice == 2)
 			{
 				add_product();
+				In_or_out();
+			}else if(_1staffchoice == 3)
+            {
+				Product_modification();
+				In_or_out();
+			}
+			else if (_1staffchoice == 4)
+			{
+				Product_Delete();
 				In_or_out();
 			}
 			else
@@ -252,33 +355,6 @@ namespace Market
 			}
 		}
 		/* ----------- end of staff list Method ----------- */
-
-
-		/* ----------- Start of print products Method ----------- */
-		public static void print_products()
-		{
-			Console.WriteLine("-----------------------------------------");
-			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
-			Console.WriteLine("-----------------------------------------");
-			foreach (Product p in Products)
-			{
-				Console.Write("{0}", p.p_id);
-				Console.Write("\t{0}", p.p_name);
-				Console.Write("\t\t\t{0}", p.p_price);
-				Console.Write("\t{0}", p.p_quantity);
-				Console.WriteLine();
-			}
-			for (uint i = 0; i < Project.index; i++)
-			{
-				Console.Write("{0}", new_product[i].p_id);
-				Console.Write("\t{0}", new_product[i].p_name);
-				Console.Write("\t\t\t{0}", new_product[i].p_price);
-				Console.Write("\t{0}", new_product[i].p_quantity);
-				Console.WriteLine();
-			}
-		}
-		/* ----------- end of print products Method ----------- */
-
 
 		/* ----------- Start of add products Method ----------- */
 		public static void add_product()
@@ -297,39 +373,17 @@ namespace Market
 					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
 					if (_idSuccess)
 					{
-						if (_id <= 13)
+						Console.Write("Enter the quantity you woule like to add: ");
+						int quantityCheck;
+						bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
+						if (quantityCheckSuccess)
 						{
-							Console.Write("Enter the quantity you woule like to add: ");
-							int quantityCheck;
-							bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
-							if (quantityCheckSuccess)
-							{
-								Products[_id].p_quantity += quantityCheck;
-								break;
-							}
-							else
-							{
-								Console.WriteLine("Plese Enter valid intger....");
-							}
-						}
-						else if (_id > 13 && (Project.index - _id) >= 0)
-						{
-							Console.Write("Enter the quantity you woule like to add: ");
-							int quantityCheck;
-							bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
-							if (quantityCheckSuccess)
-							{
-								new_product[_id].p_quantity += quantityCheck;
-								break;
-							}
-							else
-							{
-								Console.WriteLine("Plese Enter valid intger....");
-							}
+							newMarket.addQuantity(_id, quantityCheck);
+							break;
 						}
 						else
 						{
-							Console.WriteLine("---> Their is no prduct with this id, please enter a valid id.");
+							Console.WriteLine("Plese Enter valid intger....");
 						}
 					}
 					else
@@ -340,7 +394,6 @@ namespace Market
 			}
 			else if (success == 2)
 			{
-				Project.index = 0;
 				Console.Write("Enter Product Name: ");
 				string name = Console.ReadLine();
 
@@ -373,14 +426,33 @@ namespace Market
 						Console.WriteLine("Please Enter a valid intger...");
 					}
 				}
-
-				new_product[Project.index] = new Product(name, _price, _quantity);
-				Project.index++;
+				Product p = new Product(name, _price, _quantity);
+				newMarket.addProduct(p);
 			}
 			else
 			{
 				Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
 				add_product();
+			}
+		}
+		/* ----------- end of add products Method ----------- */
+		/* ----------- Start of add products Method ----------- */
+		public static void Product_Delete()
+		{
+			while (true)
+			{
+				Console.Write("Enter Product id: ");
+				int _id;
+				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+				if (_idSuccess)
+				{
+					newMarket.deleteProduct(_id);
+					break;
+				}
+				else
+				{
+					Console.WriteLine("Please Enter a valid Intger...");
+				}
 			}
 		}
 		/* ----------- end of add products Method ----------- */
@@ -408,6 +480,7 @@ namespace Market
 		/* ----------- Start of Main Method ----------- */
 		public static void Main(string[] args)
 		{
+			
 			Console.WriteLine("Welcome to our store software....");
 			CustomerORstuff();
 		}
