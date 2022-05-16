@@ -8,6 +8,7 @@ namespace Market
         protected string Name;
         protected double price;
         protected List<Product> cart = new List<Product>();
+		public List<Product> c_cart { get { return cart; } }
         public void addTocart(Product item,double q)
         {
             cart.Add( item);
@@ -37,7 +38,11 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
-    }
+		public virtual double totalPaid()
+		{
+			return price;
+		}
+	}
     public class visaCustomer : customer
     {
         private double discount;
@@ -56,7 +61,7 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
-        public double totalPaid()
+        public override double totalPaid()
         {
             return price*discount;
         } 
@@ -68,7 +73,7 @@ namespace Market
             this.Name = Name;
             this.price = price;
         }
-        public double totalPaid()
+        public override double totalPaid()
         {
             return price;
         }
@@ -102,6 +107,7 @@ namespace Market
         }
 		public _Market(List<Product> p)
         {
+			income = 0;
 			Products = p;
         }
 
@@ -116,9 +122,32 @@ namespace Market
 		{
 			Products.Add(ObJect);
 		}
-		public static void FromCustomer(customer c)
+		public static double checkOut(customer c)
         {
-
+			bool isFound = false,qOverFlow=false;
+			foreach (Product p in c.c_cart)
+            {
+				foreach(Product p2 in Products)
+                {
+					if (p.p_id == p2.p_id)
+                    {
+						isFound = true;
+						if (p2.p_quantity - p.p_quantity < 0)
+						{
+							Console.WriteLine("Quantity error");
+							qOverFlow = true;
+							break;
+						}
+						p2.p_quantity -= p.p_quantity;
+						break;
+                    }
+                }
+				if (isFound) break;
+            }
+			if (!qOverFlow)
+				return c.totalPaid();
+			else
+				return 0;
         }
 
 	}
