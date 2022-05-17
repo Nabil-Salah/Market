@@ -33,15 +33,15 @@ namespace Market
 		}
 		public void print_cart()
 		{
-			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("-------------------------------------------------");
 			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
-			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("-------------------------------------------------");
 			foreach (Product p in cart)
 			{
 				Console.Write("{0}", p.p_id);
 				Console.Write("\t{0}", p.p_name);
 				Console.Write("\t\t\t{0}", p.p_price);
-				Console.Write("\t{0}", p.p_quantity);
+				Console.Write("\t  {0}", p.p_quantity);
 				Console.WriteLine();
 			}
 		}
@@ -137,11 +137,13 @@ namespace Market
 		public void Modify_Product()
 		{
 			Console.WriteLine("You are modeifing the following product.. ");
-			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
+			Console.WriteLine("\nID\tName\t\t\tPrice\tQuantity");
+			Console.WriteLine("-------------------------------------------------");
 			Console.Write("{0}", this.p_id);
 			Console.Write("\t{0}", this.p_name);
 			Console.Write("\t\t\t{0}", this.p_price);
-			Console.Write("\t{0}", this.p_quantity);
+			Console.Write("\t  {0}", this.p_quantity);
+			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("What do yuo want to change...");
 			Console.WriteLine("[1] Name");
@@ -243,17 +245,18 @@ namespace Market
         }
 		public void print_products()
 		{
-			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("-------------------------------------------------");
 			Console.WriteLine("ID\tName\t\t\tPrice\tQuantity");
-			Console.WriteLine("-----------------------------------------");
+			Console.WriteLine("-------------------------------------------------");
 			foreach (Product p in Products)
 			{
 				Console.Write("{0}", p.p_id);
 				Console.Write("\t{0}", p.p_name);
 				Console.Write("\t\t\t{0}", p.p_price);
-				Console.Write("\t{0}", p.p_quantity);
-				Console.WriteLine();
+				Console.Write("\t  {0}", p.p_quantity);
+				Console.WriteLine("");
 			}
+			Console.WriteLine();
 		}
 		public void addQuantity(int _id, int q)
 		{
@@ -313,7 +316,6 @@ namespace Market
 			else if (_1stchoice == 2)
 			{
 				customerGet();
-				Console.WriteLine("HI, Customer...");
 			}
 			else
 			{
@@ -324,13 +326,13 @@ namespace Market
 		public static void customerGet()
         {
 			Console.Clear();
-			Console.WriteLine("Welcome to admin panel.....");
+			Console.WriteLine("HI, Customer...");
 			Console.WriteLine("Please choose what do you want to do....");
 			Console.WriteLine("[-] Products");
-			Console.WriteLine("\t[1] List    Products");
-			Console.WriteLine("\t[2] Add     Products");
-			Console.WriteLine("\t[3] Delete  Products");
-			Console.WriteLine("\t[4] checkout  Products");
+			Console.WriteLine("\t[1] List cart Products");
+			Console.WriteLine("\t[2] Add Products to cart");
+			Console.WriteLine("\t[3] Delete Products from cart");
+			Console.WriteLine("\t[4] Checkout");
 			Console.Write("Please choose number from the above:     ");
 			int _1staffchoice;
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
@@ -432,9 +434,25 @@ namespace Market
 				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
 				if (_idSuccess)
 				{
-					newMarket.modifyP(_id);
+					bool found = false;
+					foreach(Product p in Products)
+			            {
+							if(p.p_id == _id)
+			                {
+								found = true;
+								break;
+			                }
+			                else
+			                {
+			                	found = false;
+			                }
+			            }
+		            if (found) {
+						newMarket.modifyP(_id);
 					break;
-					
+					}else{
+						Console.WriteLine("\n-------> there is no prduct with this id please enter a valid id. <-------\n");
+					}
 				}
 				else
 				{
@@ -520,7 +538,20 @@ namespace Market
 					Console.Write("Enter Product id: ");
 					int _id;
 					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
-					if (_idSuccess)
+					bool found = false;
+					foreach(Product p in Products)
+			            {
+							if(p.p_id == _id)
+			                {
+								found = true;
+								break;
+			                }
+			                else
+			                {
+			                	found = false;
+			                }
+			            }
+					if (_idSuccess && found == true)
 					{
 						Console.Write("Enter the quantity you woule like to add: ");
 						int quantityCheck;
@@ -537,7 +568,7 @@ namespace Market
 					}
 					else
 					{
-						Console.WriteLine("Please Enter a valid Intger...");
+						Console.WriteLine("Please Enter a valid id...");
 					}
 				}
 			}
@@ -593,14 +624,27 @@ namespace Market
 				Console.Write("Enter Product id: ");
 				int _id;
 				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
-				if (_idSuccess)
+				bool found = false;
+				foreach(Product p in Products)
+		            {
+						if(p.p_id == _id)
+		                {
+							found = true;
+							break;
+		                }
+		                else
+		                {
+		                	found = false;
+		                }
+		            }
+				if (_idSuccess && found == true)
 				{
 					newMarket.deleteProduct(_id);
 					break;
 				}
 				else
 				{
-					Console.WriteLine("Please Enter a valid Intger...");
+					Console.WriteLine("Please Enter a valid id...");
 				}
 			}
 		}
