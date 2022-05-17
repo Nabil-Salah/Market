@@ -9,93 +9,28 @@ namespace Market
         protected double price;
         protected List<Product> cart = new List<Product>();
 		public List<Product> c_cart { get { return cart; } }
-        public void addTocart()
+        public void addTocart(Product newProduct)
         {
-			Console.WriteLine("[1] add to existing product");
-			Console.WriteLine("[2] add new product");
-			Console.Write("Please Choose (1) or (2)    ");
-			int success;
-			bool productScucess = int.TryParse(Console.ReadLine(), out success);
-			if (success == 1)
-			{
-				while (true)
-				{
-					Console.Write("Enter Product id: ");
-					int _id;
-					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
-					if (_idSuccess)
-					{
-						Console.Write("Enter the quantity you woule like to add: ");
-						int quantityCheck;
-						bool quantityCheckSuccess = int.TryParse(Console.ReadLine(), out quantityCheck);
-						if (quantityCheckSuccess)
-						{
-							foreach (Product product in cart)
-                            {
-								if(product.p_id == _id)
-                                {
-									product.p_quantity += quantityCheck;
-									price += quantityCheck * product.p_price;
-									break;
-                                }
-                            }
-							break;
-						}
-						else
-						{
-							Console.WriteLine("Plese Enter valid intger....");
-						}
-					}
-					else
-					{
-						Console.WriteLine("Please Enter a valid Intger...");
-					}
-				}
-			}
-			else if (success == 2)
-			{
-				Console.Write("Enter Product Name: ");
-				string name = Console.ReadLine();
-
-				double _price;
-				while (true)
-				{
-					Console.Write("Enter Product Price: ");
-					bool _priceSuccess = double.TryParse(Console.ReadLine(), out _price);
-					if (_priceSuccess)
-					{
-						break;
-					}
-					else
-					{
-						Console.WriteLine("Please Enter a valid decmial...");
-					}
-				}
-
-				int _quantity;
-				while (true)
-				{
-					Console.Write("Enter Product Quantity: ");
-					bool _quantitySuccess = int.TryParse(Console.ReadLine(), out _quantity);
-					if (_quantitySuccess)
-					{
-						break;
-					}
-					else
-					{
-						Console.WriteLine("Please Enter a valid intger...");
-					}
-				}
-				Product p = new Product(name, _price, _quantity);
-				cart.Add(p);
-				price += p.p_price;
-			}
-			else
-			{
-				Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
-				addTocart();
-			}
+			Console.WriteLine("Enter Quantity?");
+			int q = int.Parse(Console.ReadLine());
+			newProduct.p_quantity = q;
+			cart.Add(newProduct);
+			price += newProduct.p_price*q;
         }
+		public void addQuantity(Product newProduct)
+		{
+			Console.WriteLine("Enter Quantity?");
+			int q = int.Parse(Console.ReadLine());
+			newProduct.p_quantity = q;
+			foreach (Product p in cart)
+            {
+				if(p.p_id == newProduct.p_id)
+                {
+					p.p_quantity += q;
+					price += q*p.p_price;
+                }
+            }
+		}
 		public void print_cart()
 		{
 			Console.WriteLine("-----------------------------------------");
@@ -242,7 +177,7 @@ namespace Market
     {
 		private static double income;
 		public int NumberOfCustomers;
-		public static List<Product> Products;
+		public List<Product> Products;
 		public static double _income { get { return income; } } 
 		public _Market()
         {
@@ -406,7 +341,15 @@ namespace Market
 			}
 			else if (_1staffchoice == 2)
 			{
-				MainCustomer.addTocart();
+				/*
+				 make to options 1 add new item 
+				2 add new quatity if 1 call from customer addTocart
+				if 2 call addQuantity both pass product
+				 */
+				newMarket.print_products();
+				Console.WriteLine("Enter Id");
+				int _id = int.Parse(Console.ReadLine());
+				MainCustomer.addTocart(newMarket.Products[_id]);
 				In_or_out_c();
 			}
 			else if (_1staffchoice == 3)
