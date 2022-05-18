@@ -424,7 +424,7 @@ namespace Market
 				            }
 				            if(found == true)
 				            {
-								MainCustomer.addTocart(newMarket.Products[_id]);
+								MainCustomer.addTocart(new Product(newMarket.Products[_id]));
 								customerGet();
 
 			            	}else
@@ -445,20 +445,6 @@ namespace Market
 			else if (_1staffchoice == 4)
 			{
 				MainCustomer.print_cart();
-				/*Console.WriteLine("Please choose what is your payment method....");
-				Console.WriteLine("[-] Methods");
-				Console.WriteLine("\t[1] Visa");
-				Console.WriteLine("\t[2] Cash");
-				int i = int.Parse(Console.ReadLine());
-				if(i == 1)
-                {
-					visaCustomer v = new visaCustomer();
-					v = MainCustomer;
-                }
-                else
-                {
-
-                }*/
 				newMarket.checkOut(MainCustomer);
 				In_or_out_c();
 			}
