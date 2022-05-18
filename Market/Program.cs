@@ -12,9 +12,22 @@ namespace Market
 		public List<Product> c_cart { get { return cart; } }
         public void addTocart(Product newProduct)
         {
+			foreach (Product product in c_cart)
+            {
+				if(product.p_id == newProduct.p_id)
+                {
+					Console.WriteLine("Already Exist");
+					Console.WriteLine("Do you to add quantity?");
+					Char num = char.Parse(Console.ReadLine());
+					if(num =='y')
+						addQuantity(newProduct);
+					break;
+                }
+            }
 			Console.Write("Enter Quantity: ");
 			int q = int.Parse(Console.ReadLine());
 			newProduct.p_quantity = q;
+			newProduct.p_price = newProduct.p_price*q;
 			cart.Add(newProduct);
 			price += newProduct.p_price*q;
         }
@@ -93,10 +106,10 @@ namespace Market
                     discount = 0;
             }
         }
-        public visaCustomer(string Name,int price)
+        public visaCustomer(string Name)
         {
             this.Name = Name;
-            this.price = price;
+			price = 0;
         }
 		public visaCustomer()
 		{
@@ -110,10 +123,10 @@ namespace Market
     }
     public class cashCustomer : customer
     {
-        public cashCustomer(string Name, int price)
+        public cashCustomer(string Name)
         {
             this.Name = Name;
-            this.price = price;
+            price = 0;
         }
         public override double totalPaid()
         {
@@ -328,7 +341,7 @@ namespace Market
 					  	new Product("Bread", 2, 100),
 				};
 		public static _Market newMarket = new _Market(Products);
-		public static customer MainCustomer = new customer("Nabil");
+		public static customer MainCustomer;
 		/* ----------- start of customer ot staff Method ----------- */
 		public static void CustomerORstuff()
 		{
@@ -355,6 +368,20 @@ namespace Market
         {
 			Console.Clear();
 			Console.WriteLine("HI, Customer...");
+			Console.WriteLine("Visa Or cash");
+			int op=int.Parse(Console.ReadLine());
+			if (op == 1)
+			{
+				Console.WriteLine("Enter Name?");
+				string nam = Console.ReadLine();
+				MainCustomer = new visaCustomer(nam);
+			}
+			else if (op == 2)
+			{
+				Console.WriteLine("Enter Name?");
+				string nam = Console.ReadLine();
+				MainCustomer = new cashCustomer(nam);
+			}
 			Console.WriteLine("Please choose what do you want to do....");
 			Console.WriteLine("[-] Products");
 			Console.WriteLine("\t[1] List cart Products");
