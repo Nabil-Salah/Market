@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections.Generic;
 
 namespace Market
@@ -146,10 +147,11 @@ namespace Market
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine("What do yuo want to change...");
-			Console.WriteLine("[1] Name");
-			Console.WriteLine("[2] Price");
+			Console.WriteLine("  [1] Name");
+			Console.WriteLine("  [2] Price");
 			Console.Write("Please Enter (1) or (2)   ");
-			int choice = int.Parse(Console.ReadLine());
+			int choice;
+			bool ChoiceSuccess = int.TryParse(Console.ReadLine(), out choice);
 			if (choice == 1)
 			{
 				Console.Write("Please Enter the new name: ");
@@ -164,7 +166,10 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("---> Please Enter a valid input.");
+				Console.WriteLine("\n\t---> Please Enter a valid input.\n");
+				System.Threading.Thread.Sleep(1000);
+				Modify_Product();
+
 			}
 		}
 		public Product(Product old)
@@ -192,14 +197,36 @@ namespace Market
         }
 		public void deleteProduct(int _id)
 		{
-			foreach (Product p in Products)
-            {
-				if(p.p_id == _id)
-                {
-					Products.Remove(p);
-					break;
-				}
-            }
+			Console.WriteLine("You are deleting the following product.. ");
+			Console.WriteLine("\nID\tName\t\t\tPrice\tQuantity");
+			Console.WriteLine("-------------------------------------------------");
+			Console.Write("{0}", Products[_id].p_id);
+			Console.Write("\t{0}", Products[_id].p_name);
+			Console.Write("\t\t\t{0}", Products[_id].p_price);
+			Console.Write("\t  {0}", Products[_id].p_quantity);
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("Are you sure you want to delete this product ???   ");
+			Console.WriteLine("    [1] yes, delete this product.");
+			Console.WriteLine("    [2] no, i donnot want to delete this product");
+			Console.Write("Please Choose number (1) or number (2)     ");
+			int lastchoce;
+			bool lastchoceSuccess = int.TryParse(Console.ReadLine(), out lastchoce);
+			if(lastchoce == 1){
+				foreach (Product p in Products)
+	            {
+					if(p.p_id == _id)
+	                {
+						Products.Remove(p);
+						break;
+					}
+	            }
+	        }else if(lastchoce == 2){
+	        	Project.Product_Delete();
+	        }else{
+	        	Console.WriteLine("\n\t -----> Please Enter a valid input <-----\n");
+	        	deleteProduct(_id);
+	        }
 		}
 		public void AddProduct(List<Product> p1)
         {
@@ -334,7 +361,7 @@ namespace Market
 			Console.WriteLine("\t[3] Delete Products from cart");
 			Console.WriteLine("\t[4] Checkout");
 			Console.Write("Please choose number from the above:     ");
-			int _1staffchoice;
+			int  _1staffchoice;
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
 			if (_1staffchoice == 1)
 			{
@@ -349,7 +376,7 @@ namespace Market
 				if 2 call addQuantity both pass product
 				 */
 				newMarket.print_products();
-				Console.WriteLine("Enter Id");
+				Console.WriteLine("Enter Id: ");
 				int _id = int.Parse(Console.ReadLine());
 				MainCustomer.addTocart(newMarket.Products[_id]);
 				In_or_out_c();
@@ -381,7 +408,7 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter a vaild number <----\n");
+				Console.WriteLine("\n----> Please Enter a vaild input <----\n");
 				Staff_List_Choose();
 			}
 		}
@@ -451,12 +478,12 @@ namespace Market
 						newMarket.modifyP(_id);
 					break;
 					}else{
-						Console.WriteLine("\n-------> there is no prduct with this id please enter a valid id. <-------\n");
+						Console.WriteLine("\n\t-----> There in no product with this id please enter a valid id. <-----\n");
 					}
 				}
 				else
 				{
-					Console.WriteLine("Please Enter a valid Intger...");
+					Console.WriteLine("\n\t-----> There in no product with this id please enter a valid id. <-----\n");
 				}
 			}
 		}
@@ -517,7 +544,9 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter a vaild number <----\n");
+				Console.WriteLine("\n----> Please Enter a vaild input <----\n");
+				System.Threading.Thread.Sleep(1000);
+
 				Staff_List_Choose();
 			}
 		}
@@ -644,7 +673,7 @@ namespace Market
 				}
 				else
 				{
-					Console.WriteLine("Please Enter a valid id...");
+					Console.WriteLine("\n\t-----> There in no product with this id please enter a valid id. <-----\n");
 				}
 			}
 		}
