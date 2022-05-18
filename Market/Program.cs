@@ -356,6 +356,22 @@ namespace Market
 			}
 			else if (_1stchoice == 2)
 			{
+				Console.Clear();
+				Console.WriteLine("HI, Customer...");
+				Console.WriteLine("Visa Or cash");
+				int op = int.Parse(Console.ReadLine());
+				if (op == 1)
+				{
+					Console.WriteLine("Enter Name?");
+					string nam = Console.ReadLine();
+					MainCustomer = new visaCustomer(nam);
+				}
+				else if (op == 2)
+				{
+					Console.WriteLine("Enter Name?");
+					string nam = Console.ReadLine();
+					MainCustomer = new cashCustomer(nam);
+				}
 				customerGet();
 			}
 			else
@@ -367,21 +383,7 @@ namespace Market
 		public static void customerGet()
         {
 			Console.Clear();
-			Console.WriteLine("HI, Customer...");
-			Console.WriteLine("Visa Or cash");
-			int op=int.Parse(Console.ReadLine());
-			if (op == 1)
-			{
-				Console.WriteLine("Enter Name?");
-				string nam = Console.ReadLine();
-				MainCustomer = new visaCustomer(nam);
-			}
-			else if (op == 2)
-			{
-				Console.WriteLine("Enter Name?");
-				string nam = Console.ReadLine();
-				MainCustomer = new cashCustomer(nam);
-			}
+			
 			Console.WriteLine("Please choose what do you want to do....");
 			Console.WriteLine("[-] Products");
 			Console.WriteLine("\t[1] List cart Products");
