@@ -12,7 +12,7 @@ namespace Market
 		public List<Product> c_cart { get { return cart; } }
         public void addTocart(Product newProduct)
         {
-			Console.WriteLine("Enter Quantity?");
+			Console.Write("Enter Quantity: ");
 			int q = int.Parse(Console.ReadLine());
 			newProduct.p_quantity = q;
 			cart.Add(newProduct);
@@ -45,6 +45,7 @@ namespace Market
 				Console.Write("\t  {0}", p.p_quantity);
 				Console.WriteLine();
 			}
+			Console.WriteLine();
 		}
 		public void removeFromcart(int itemId)
         {
@@ -370,16 +371,42 @@ namespace Market
 			}
 			else if (_1staffchoice == 2)
 			{
-				/*
-				 make to options 1 add new item 
-				2 add new quatity if 1 call from customer addTocart
-				if 2 call addQuantity both pass product
-				 */
+
+
+
 				newMarket.print_products();
-				Console.WriteLine("Enter Id: ");
-				int _id = int.Parse(Console.ReadLine());
-				MainCustomer.addTocart(newMarket.Products[_id]);
-				In_or_out_c();
+				while(true){
+					Console.Write("Enter product Id: ");
+					int  _id;
+					bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
+					if(_idSuccess){
+						bool found = false;
+						foreach(Product p in Products)
+				            {
+								if(p.p_id == _id)
+				                {
+									found = true;
+									break;
+				                }
+				                else
+				                {
+				                	found = false;
+				                }
+				            }
+				            if(found == true)
+				            {
+								MainCustomer.addTocart(newMarket.Products[_id]);
+								customerGet();
+
+			            	}else
+			            	{
+			            		Console.WriteLine("\n\t----> There is no product whis this id please neter a valid id. <----\n");
+
+			            	}
+					}else{
+						Console.WriteLine("\n\t----> Please enter a valid input <----\n");
+					}
+				}
 			}
 			else if (_1staffchoice == 3)
 			{
@@ -476,7 +503,7 @@ namespace Market
 			            }
 		            if (found) {
 						newMarket.modifyP(_id);
-					break;
+						break;
 					}else{
 						Console.WriteLine("\n\t-----> There in no product with this id please enter a valid id. <-----\n");
 					}
