@@ -19,15 +19,16 @@ namespace Market
 					Console.WriteLine("Already Exist");
 					Console.WriteLine("Do you to add quantity?");
 					Char num = char.Parse(Console.ReadLine());
-					if(num =='y')
+					if (num == 'y')
+					{
 						addQuantity(newProduct);
-					break;
+						return;
+					}
                 }
             }
 			Console.Write("Enter Quantity: ");
 			int q = int.Parse(Console.ReadLine());
-			newProduct.p_quantity = q;
-			newProduct.p_price = newProduct.p_price*q;
+			newProduct.p_quantity -= q;
 			cart.Add(newProduct);
 			price += newProduct.p_price*q;
         }
@@ -118,7 +119,7 @@ namespace Market
 		}
 		public override double totalPaid()
         {
-            return price*discount;
+            return price - price*discount;
         } 
     }
     public class cashCustomer : customer
@@ -257,36 +258,10 @@ namespace Market
 		{
 			Products.Add(ObJect);
 		}
-		public double checkOut(customer c)
+		public double checkOut(ref customer c)
         {
-			bool isFound = false,qOverFlow=false;
-			foreach (Product p in c.c_cart)
-            {
-				foreach(Product p2 in Products)
-                {
-					if (p.p_id == p2.p_id)
-                    {
-						isFound = true;
-						if (p2.p_quantity - p.p_quantity < 0)
-						{
-							Console.WriteLine("Quantity error");
-							qOverFlow = true;
-							break;
-						}
-						p2.p_quantity -= p.p_quantity;
-						break;
-                    }
-                }
-				if (isFound) break;
-            }
-			
-			if (!qOverFlow)
-			{
 				income += c.totalPaid();
 				return c.totalPaid();
-			}
-			else
-				return 0;
         }
 		public void print_products()
 		{
@@ -360,23 +335,29 @@ namespace Market
 			}
 			else if (_1stchoice == 2)
 			{
-				Console.Clear();
-				Console.WriteLine("HI, Customer...");
-				Console.WriteLine("Visa Or cash");
-				int op = int.Parse(Console.ReadLine());
-				if (op == 1)
+
+				while (true)
 				{
-					Console.WriteLine("Enter Name?");
-					string nam = Console.ReadLine();
-					MainCustomer = new visaCustomer(nam);
+					Console.Clear();
+					Console.WriteLine("HI, Customer...");
+					Console.WriteLine("Visa Or cash");
+					Console.WriteLine("Enter 1 for visa \nEnter 2 for cash");
+					int op = int.Parse(Console.ReadLine());
+					if (op != 1 && op != 2) continue;
+					if (op == 1)
+					{
+						Console.WriteLine("Enter Name?");
+						string nam = Console.ReadLine();
+						MainCustomer = new visaCustomer(nam);
+					}
+					else if (op == 2)
+					{
+						Console.WriteLine("Enter Name?");
+						string nam = Console.ReadLine();
+						MainCustomer = new cashCustomer(nam);
+					}
+					customerGet();
 				}
-				else if (op == 2)
-				{
-					Console.WriteLine("Enter Name?");
-					string nam = Console.ReadLine();
-					MainCustomer = new cashCustomer(nam);
-				}
-				customerGet();
 			}
 			else
 			{
@@ -404,9 +385,6 @@ namespace Market
 			}
 			else if (_1staffchoice == 2)
 			{
-
-
-
 				newMarket.print_products();
 				while(true){
 					Console.Write("Enter product Id: ");
@@ -426,7 +404,7 @@ namespace Market
 				                	found = false;
 				                }
 				            }
-				            if(found == true)
+				        if(found == true)
 				            {
 								MainCustomer.addTocart(new Product(newMarket.Products[_id]));
 								customerGet();
@@ -449,8 +427,8 @@ namespace Market
 			else if (_1staffchoice == 4)
 			{
 				MainCustomer.print_cart();
-				newMarket.checkOut(MainCustomer);
-				In_or_out_c();
+				Console.WriteLine("your check: " +newMarket.checkOut(ref MainCustomer) + "\nOk Good BYE........ ");
+				Environment.Exit(0);
 			}
 			else
 			{
