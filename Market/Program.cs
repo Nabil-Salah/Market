@@ -508,11 +508,12 @@ namespace Market
 				if (_idSuccess)
 				{
 					bool found = false;
-					foreach(Product p in Products)
+					foreach(Product p in newMarket.Products)
 			            {
 							if(p.p_id == _id)
 			                {
 								found = true;
+								Console.WriteLine(p.ToString());
 								break;
 			                }
 			                else
