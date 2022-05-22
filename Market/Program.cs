@@ -193,6 +193,10 @@ namespace Market
 			this.p_price = old.p_price;
 			this.p_quantity = old.p_quantity;
         }
+		public override string ToString()
+		{
+			return "Name: " + p_name + "Price: " + p_price;
+		}
 	}
 	public class _Market
     {
