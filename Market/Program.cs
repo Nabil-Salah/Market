@@ -1,3 +1,9 @@
+/*
+		Made by:
+			Mahmoud Algohary -swe-
+			Nabil Salah -swe-
+			Mostafa Mahmoud -swe-
+ */
 using System;
 using System.Threading;
 using System.Collections.Generic;
