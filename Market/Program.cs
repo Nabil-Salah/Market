@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Market
 {
-    public class customer
+    public abstract class customer
     {
         protected string Name;
         protected double price;
@@ -221,10 +221,11 @@ namespace Market
 		}
 	}
 	public class _Market
-    {
+	{
 		private static double income;
 		public int NumberOfCustomers;
 		public List<Product> Products;
+		public Product this[int i] { get{ return Products[i]; } set { Products[i] = value; } }
 		public static double _income { get { return income; } } 
 		public _Market()
         {
@@ -428,7 +429,7 @@ namespace Market
 				            }
 				        if(found == true)
 				            {
-								MainCustomer.addTocart(newMarket.Products[_id]);
+								MainCustomer.addTocart(newMarket[_id]);
 								customerGet();
 
 			            	}else
