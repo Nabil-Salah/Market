@@ -219,6 +219,14 @@ namespace Market
 		{
 			return "Name: " + p_name + "Price: " + p_price;
 		}
+		public static bool operator >(Product a, Product b)
+        {
+			return a.p_price > b.p_price;
+        }
+		public static bool operator <(Product a, Product b)
+		{
+			return a.p_price < b.p_price;
+		}
 	}
 	public class _Market
 	{
