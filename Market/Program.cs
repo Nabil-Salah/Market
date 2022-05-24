@@ -24,6 +24,7 @@ namespace Market
                 {
 					Console.WriteLine("Already Exist");
 					Console.WriteLine("Do you to add quantity?");
+					//tryparse
 					Char num = char.Parse(Console.ReadLine());
 					if (num == 'y')
 					{
@@ -34,21 +35,25 @@ namespace Market
             }
 			Console.Write("Enter Quantity: ");
 			int q = int.Parse(Console.ReadLine());
+			Product p = new Product(newProduct);
+			p.p_quantity = q;
+			p.p_price = newProduct.p_price * q;
+			cart.Add(p);
+			price += p.p_price;
 			newProduct.p_quantity -= q;
-			cart.Add(newProduct);
-			price += newProduct.p_price*q;
         }
 		public void addQuantity(Product newProduct)
 		{
 			Console.WriteLine("Enter Quantity?");
 			int q = int.Parse(Console.ReadLine());
-			newProduct.p_quantity = q;
+			newProduct.p_quantity -= q;
 			foreach (Product p in cart)
             {
 				if(p.p_id == newProduct.p_id)
                 {
 					p.p_quantity += q;
-					price += q*p.p_price;
+					p.p_price += q * newProduct.p_price;
+					price += q* newProduct.p_price;
                 }
             }
 		}
@@ -67,19 +72,29 @@ namespace Market
 			}
 			Console.WriteLine();
 		}
-		public void removeFromcart(int itemId)
+		public void removeFromcart(int itemId,List<Product> pro)
         {
+			int q = 0;
             if(cart.Count == 0) return;
             foreach (Product p in cart)
             {
 				if(p.p_id == itemId)
                 {
+					q=p.p_quantity;
 					price -= p.p_price * p.p_quantity;
 					cart.Remove(p);
 					break;
                 }
             }
-        }
+			foreach (Product p in pro)
+			{
+				if (p.p_id == itemId)
+				{
+					p.p_quantity += q;
+					break;
+				}
+			}
+		}
         public customer()
         {
             Name = "Default Name";
@@ -348,6 +363,7 @@ namespace Market
 					Console.WriteLine("HI, Customer...");
 					Console.WriteLine("Visa Or cash");
 					Console.WriteLine("Enter 1 for visa \nEnter 2 for cash");
+					//tryparse
 					int op = int.Parse(Console.ReadLine());
 					if (op != 1 && op != 2) continue;
 					if (op == 1)
@@ -412,7 +428,7 @@ namespace Market
 				            }
 				        if(found == true)
 				            {
-								MainCustomer.addTocart(new Product(newMarket.Products[_id]));
+								MainCustomer.addTocart(newMarket.Products[_id]);
 								customerGet();
 
 			            	}else
@@ -458,6 +474,7 @@ namespace Market
 			else
 			{
 				Console.WriteLine("Ok Good BYE........");
+				Environment.Exit(0);
 			}
 		}
 		/* ----------- end of int or out Method ----------- */
@@ -471,7 +488,7 @@ namespace Market
 				bool _idSuccess = int.TryParse(Console.ReadLine(), out _id);
 				if (_idSuccess)
 				{
-					MainCustomer.removeFromcart(_id);
+					MainCustomer.removeFromcart(_id, newMarket.Products);
 					break;
 				}
 				else
