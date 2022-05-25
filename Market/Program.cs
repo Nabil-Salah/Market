@@ -1,8 +1,8 @@
 /*
 		Made by:
-			Mahmoud Algohary -swe-
-			Nabil Salah -swe-
-			Mostafa Mahmoud -swe-
+			Mahmoud Algohary -SWE-
+			Nabil   Salah    -SWE-
+			Mostafa Mahmoud  -SWE-
  */
 using System;
 using System.Threading;
@@ -22,41 +22,64 @@ namespace Market
             {
 				if(product.p_id == newProduct.p_id)
                 {
-					Console.WriteLine("Already Exist");
-					Console.WriteLine("Do you to add quantity?");
-					//tryparse
-					Char num = char.Parse(Console.ReadLine());
-					if (num == 'y')
-					{
-						addQuantity(newProduct);
-						return;
+					Console.WriteLine("  This product already exist in the cart...");
+					Console.Write("  Do you to add quantity\nletter (y) to proceed any letter to quit:  ");
+					Char num;
+					bool numSuccess = char.TryParse(Console.ReadLine(), out num);
+					if(numSuccess){
+						if (num == 'y')
+						{
+							addQuantity(newProduct);
+							return;
+						}else{
+							Project.customerGet();
+						}
+					}else{
+						Console.WriteLine("\n\t---> Please Enter a valid input. <---\n");
 					}
                 }
             }
-			Console.Write("Enter Quantity: ");
-			int q = int.Parse(Console.ReadLine());
-			Product p = new Product(newProduct);
-			p.p_quantity = q;
-			p.p_price = newProduct.p_price * q;
-			cart.Add(p);
-			price += p.p_price;
-			newProduct.p_quantity -= q;
+
+            while(true){
+				Console.Write("Enter Quantity: ");
+				int q;
+				bool qSuccess = int.TryParse(Console.ReadLine(), out q);
+				if (qSuccess){
+					Product p = new Product(newProduct);
+					p.p_quantity = q;
+					p.p_price = newProduct.p_price * q;
+					cart.Add(p);
+					price += p.p_price;
+					newProduct.p_quantity -= q;
+					break;
+				}else{
+					Console.WriteLine("\n\t --->  Please enter a valid decimal <---\n");
+				}
+			}
         }
+
 		public void addQuantity(Product newProduct)
 		{
-			Console.WriteLine("Enter Quantity?");
-			int q = int.Parse(Console.ReadLine());
-			newProduct.p_quantity -= q;
-			foreach (Product p in cart)
-            {
-				if(p.p_id == newProduct.p_id)
-                {
-					p.p_quantity += q;
-					p.p_price += q * newProduct.p_price;
-					price += q* newProduct.p_price;
-                }
+			Console.Write("Enter Quantity: ");
+			int q;
+			bool qSuccess = int.TryParse(Console.ReadLine(), out q);
+			if(qSuccess){
+				newProduct.p_quantity -= q;
+				foreach (Product p in cart)
+	            {
+					if(p.p_id == newProduct.p_id)
+	                {
+						p.p_quantity += q;
+						p.p_price += q * newProduct.p_price;
+						price += q* newProduct.p_price;
+	                }
+	            }
+            }else{
+            	Console.WriteLine("\n\t---> Please Enter a valid input. <---\n");
+            	addQuantity(newProduct);
             }
 		}
+
 		public void print_cart()
 		{
 			Console.WriteLine("-------------------------------------------------");
@@ -72,6 +95,7 @@ namespace Market
 			}
 			Console.WriteLine();
 		}
+
 		public void removeFromcart(int itemId,List<Product> pro)
         {
 			int q = 0;
@@ -95,26 +119,31 @@ namespace Market
 				}
 			}
 		}
+
         public customer()
         {
             Name = "Default Name";
             price = 0;
         }
+
         public customer(string Name,int price)
         {
             this.Name = Name;
             this.price = price;
         }
+
 		public customer(string Name)
 		{
 			this.Name = Name;
 			this.price = 0;
 		}
+
 		public virtual double totalPaid()
 		{
 			return price;
 		}
 	}
+
     public class visaCustomer : customer
     {
         private double discount;
@@ -128,21 +157,25 @@ namespace Market
                     discount = 0;
             }
         }
+
         public visaCustomer(string Name)
         {
             this.Name = Name;
 			price = 0;
         }
+
 		public visaCustomer()
 		{
 			this.Name = "defualt";
 			this.price = 0;
 		}
+
 		public override double totalPaid()
         {
             return price - price*discount;
         } 
     }
+
     public class cashCustomer : customer
     {
         public cashCustomer(string Name)
@@ -150,11 +183,13 @@ namespace Market
             this.Name = Name;
             price = 0;
         }
+
         public override double totalPaid()
         {
             return price;
         }
     }
+
 	public class Product
 	{
 		public static int counter;
@@ -171,6 +206,7 @@ namespace Market
 			this.p_quantity = p_quantity;
 			Product.counter++;
 		}
+
 		public void Modify_Product()
 		{
 			Console.WriteLine("You are modeifing the following product.. ");
@@ -208,6 +244,7 @@ namespace Market
 
 			}
 		}
+
 		public Product(Product old)
         {
 			this.p_id = old.p_id;
@@ -215,19 +252,23 @@ namespace Market
 			this.p_price = old.p_price;
 			this.p_quantity = old.p_quantity;
         }
+
 		public override string ToString()
 		{
 			return "Name: " + p_name + "Price: " + p_price;
 		}
+
 		public static bool operator >(Product a, Product b)
         {
 			return a.p_price > b.p_price;
         }
+
 		public static bool operator <(Product a, Product b)
 		{
 			return a.p_price < b.p_price;
 		}
 	}
+
 	public class _Market
 	{
 		private static double income;
@@ -277,6 +318,7 @@ namespace Market
 	        	deleteProduct(_id);
 	        }
 		}
+
 		public void AddProduct(List<Product> p1)
         {
 			for (int i = 0; i < p1.Count; i++)
@@ -284,15 +326,18 @@ namespace Market
 				Products.Add(p1[i]);
             }
         }
+
 		public void addProduct(Product ObJect)
 		{
 			Products.Add(ObJect);
 		}
+
 		public double checkOut(ref customer c)
         {
 				income += c.totalPaid();
 				return c.totalPaid();
         }
+
 		public void print_products()
 		{
 			Console.WriteLine("-------------------------------------------------");
@@ -308,6 +353,7 @@ namespace Market
 			}
 			Console.WriteLine();
 		}
+
 		public void addQuantity(int _id, int q)
 		{
 			foreach (Product p in Products)
@@ -318,6 +364,7 @@ namespace Market
 				}
 			}
 		}
+
 		public void modifyP(int _id)
         {
 			foreach(Product p in Products)
@@ -330,6 +377,7 @@ namespace Market
             }
         }
 	}
+
 	class Project
 	{
 
@@ -351,7 +399,7 @@ namespace Market
 				};
 		public static _Market newMarket = new _Market(Products);
 		public static customer MainCustomer;
-		/* ----------- start of customer ot staff Method ----------- */
+
 		public static void CustomerORstuff()
 		{
 			Console.WriteLine("\t[1] Marketr Staff");
@@ -365,48 +413,60 @@ namespace Market
 			}
 			else if (_1stchoice == 2)
 			{
-
+				
 				while (true)
 				{
 					Console.Clear();
-					Console.WriteLine("HI, Customer...");
-					Console.WriteLine("Visa Or cash");
-					Console.WriteLine("Enter 1 for visa \nEnter 2 for cash");
-					//tryparse
-					int op = int.Parse(Console.ReadLine());
-					if (op != 1 && op != 2) continue;
-					if (op == 1)
-					{
-						Console.WriteLine("Enter Name?");
-						string nam = Console.ReadLine();
-						MainCustomer = new visaCustomer(nam);
+					Console.WriteLine("Welcome to customer mangment section....");
+					Console.WriteLine("please choose the payment method to proceed");
+					Console.WriteLine("\t[1] Visa");
+					Console.WriteLine("\t[2] Cash");
+					Console.Write("Choose form (1) or (2): ");
+					int op;
+					bool opSuccess = int.TryParse(Console.ReadLine(), out op);
+
+					if(opSuccess){
+						if (op == 1)
+						{
+							Console.Write("Enter Customer Name: ");
+							string nam = Console.ReadLine();
+							MainCustomer = new visaCustomer(nam);
+							customerGet();
+						}
+						else if (op == 2)
+						{
+							Console.Write("Enter Customer Name: ");
+							string nam = Console.ReadLine();
+							MainCustomer = new cashCustomer(nam);
+							customerGet();
+						}else{
+							Console.WriteLine("\n\t---> Please Choose form 1 or 2 only <---\n");
+							System.Threading.Thread.Sleep(1000);
+						}
+					}else{
+						Console.WriteLine("\n\t---> Please Enter a valid input. <---\n");
+						System.Threading.Thread.Sleep(1000);
 					}
-					else if (op == 2)
-					{
-						Console.WriteLine("Enter Name?");
-						string nam = Console.ReadLine();
-						MainCustomer = new cashCustomer(nam);
-					}
-					customerGet();
 				}
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter number (1) or number (2) <----\n");
+				Console.WriteLine("\n\t---> Please Enter a valid input. <---");
+				Console.WriteLine("\t---> number (1) and number (2) are valid inputs. <---\n");
 				CustomerORstuff();
 			}
 		}
+
 		public static void customerGet()
         {
 			Console.Clear();
-			
 			Console.WriteLine("Please choose what do you want to do....");
 			Console.WriteLine("[-] Products");
 			Console.WriteLine("\t[1] List cart Products");
 			Console.WriteLine("\t[2] Add Products to cart");
 			Console.WriteLine("\t[3] Delete Products from cart");
 			Console.WriteLine("\t[4] Checkout");
-			Console.Write("Please choose number from the above:     ");
+			Console.Write("Please choose an operation form 1 to 4:     ");
 			int  _1staffchoice;
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
 			if (_1staffchoice == 1)
@@ -458,16 +518,19 @@ namespace Market
 			else if (_1staffchoice == 4)
 			{
 				MainCustomer.print_cart();
-				Console.WriteLine("your check: " +newMarket.checkOut(ref MainCustomer) + "\nOk Good BYE........ ");
+				Console.WriteLine("Total Price: " + newMarket.checkOut(ref MainCustomer));
+				Console.WriteLine("Thank you for choosing out Sooftware...");
+				Console.WriteLine("Have a good day...");
 				Environment.Exit(0);
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter a vaild input <----\n");
-				Staff_List_Choose();
+				Console.WriteLine("\n\t----> Please Enter a vaild input <----\n");
+				System.Threading.Thread.Sleep(1000);
+				customerGet();
 			}
 		}
-		/* ----------- start of in or out Method ----------- */
+
 		public static void In_or_out_c()
 		{
 			Console.WriteLine("Would you like to proceed or exit...");
@@ -486,8 +549,7 @@ namespace Market
 				Environment.Exit(0);
 			}
 		}
-		/* ----------- end of int or out Method ----------- */
-		/* ----------- Start of add products Method ----------- */
+
 		public static void Product_Delete_C()
 		{
 			while (true)
@@ -506,8 +568,7 @@ namespace Market
 				}
 			}
 		}
-		/* ----------- end of add products Method ----------- */
-		/* ----------- end of customer ot staff Method ----------- */
+
 		public static void Product_modification()
 		{
 			while (true)
@@ -545,7 +606,6 @@ namespace Market
 			}
 		}
 
-		/* ----------- Start of staff login Method ----------- */
 		public static void staff_log_in()
 		{
 			Console.WriteLine("\n*** Hi their, please enter market staff login credentials ***");
@@ -559,14 +619,11 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("\n----> Wrong user name or password please try agin <----\n");
+				Console.WriteLine("\n----> Wrong username or password please try agin <----\n");
 				staff_log_in();
 			}
 		}
-		/* ----------- end of staff login Method ----------- */
 
-
-		/* ----------- Start of staff list Method ----------- */
 		public static void Staff_List_Choose()
 		{
 			Console.Clear();
@@ -577,7 +634,7 @@ namespace Market
 			Console.WriteLine("\t[2] Add     Products");
 			Console.WriteLine("\t[3] Modifiy Products");
 			Console.WriteLine("\t[4] Delete  Products");
-			Console.Write("Please choose number from the above:     ");
+			Console.Write("Please choose operation from 1 to 4:     ");
 			int _1staffchoice;
 			bool _1staffchoiceScucess = int.TryParse(Console.ReadLine(), out _1staffchoice);
 			if (_1staffchoice == 1)
@@ -601,19 +658,18 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter a vaild input <----\n");
+				Console.WriteLine("\n\t----> Please Enter a vaild input <----\n");
+				Console.WriteLine("\t----> numbers from 1 to 4 are valid inputs <----\n");
 				System.Threading.Thread.Sleep(1000);
 
 				Staff_List_Choose();
 			}
 		}
-		/* ----------- end of staff list Method ----------- */
 
-		/* ----------- Start of add products Method ----------- */
 		public static void add_product()
 		{
-			Console.WriteLine("[1] add to existing product");
-			Console.WriteLine("[2] add new product");
+			Console.WriteLine("  [1] add to existing product");
+			Console.WriteLine("  [2] add new product");
 			Console.Write("Please Choose (1) or (2)    ");
 			int success;
 			bool productScucess = int.TryParse(Console.ReadLine(), out success);
@@ -649,12 +705,12 @@ namespace Market
 						}
 						else
 						{
-							Console.WriteLine("Plese Enter valid intger....");
+							Console.WriteLine("\n\t---> Plese Enter valid intger.... <---\n");
 						}
 					}
 					else
 					{
-						Console.WriteLine("Please Enter a valid id...");
+						Console.WriteLine("\n\t---> Not a valid id, please Enter a valid id... <---\n");
 					}
 				}
 			}
@@ -697,12 +753,11 @@ namespace Market
 			}
 			else
 			{
-				Console.WriteLine("\n----> Please Enter a vaild choic number (1) or number (2) <----\n");
+				Console.WriteLine("\n----> Please Enter a vaild choice number (1) or number (2) <----\n");
 				add_product();
 			}
 		}
-		/* ----------- end of add products Method ----------- */
-		/* ----------- Start of add products Method ----------- */
+
 		public static void Product_Delete()
 		{
 			while (true)
@@ -734,9 +789,7 @@ namespace Market
 				}
 			}
 		}
-		/* ----------- end of add products Method ----------- */
 
-		/* ----------- start of in or out Method ----------- */
 		public static void In_or_out()
 		{
 			Console.WriteLine("Would you like to proceed or exit...");
@@ -754,15 +807,12 @@ namespace Market
 				Console.WriteLine("Ok Good BYE........");
 			}
 		}
-		/* ----------- end of int or out Method ----------- */
 
-		/* ----------- Start of Main Method ----------- */
 		public static void Main(string[] args)
 		{
 			
 			Console.WriteLine("Welcome to our store software....");
 			CustomerORstuff();
 		}
-		/* ----------- end of Main Method ----------- */
 	}
 }
